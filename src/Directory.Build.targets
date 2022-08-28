@@ -1,9 +1,9 @@
 <Project>
 
   <PropertyGroup>
-    <FrameworkVersion>3.1.0</FrameworkVersion>
-    <ExtensionsVersion>3.1.0</ExtensionsVersion>
-    <EntityFrameworkVersion>3.1.0</EntityFrameworkVersion>
+    <FrameworkVersion>6.0.8</FrameworkVersion>
+    <ExtensionsVersion>6.0.8</ExtensionsVersion>
+    <EntityFrameworkVersion>6.0.8</EntityFrameworkVersion>
     
     <IdentityServerVersion>4.1.2-*</IdentityServerVersion>
   </PropertyGroup>
