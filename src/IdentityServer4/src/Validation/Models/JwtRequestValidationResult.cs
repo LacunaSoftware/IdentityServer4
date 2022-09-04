@@ -3,6 +3,7 @@
 
 
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace IdentityServer4.Validation
 {
@@ -14,6 +15,6 @@ namespace IdentityServer4.Validation
         /// <summary>
         /// The key/value pairs from the JWT payload of a successfuly validated request.
         /// </summary>
-        public Dictionary<string, string> Payload { get; set; }
+        public List<Claim> Payload { get; set; }
     }
 }

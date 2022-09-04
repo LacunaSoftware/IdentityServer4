@@ -1,10 +1,11 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
 using IdentityModel;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 
 namespace IdentityServer4.Validation
 {
@@ -172,7 +173,7 @@ namespace IdentityServer4.Validation
         /// <value>
         /// The request object values
         /// </value>
-        public Dictionary<string, string> RequestObjectValues { get; set; } = new Dictionary<string, string>();
+        public List<Claim> RequestObjectValues { get; set; } = new List<Claim>();
 
         /// <summary>
         /// Gets or sets the request object (either passed by value or retrieved by reference)

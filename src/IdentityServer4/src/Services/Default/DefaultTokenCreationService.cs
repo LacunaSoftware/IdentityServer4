@@ -8,12 +8,15 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using static IdentityServer4.IdentityServerConstants;
+using Token = IdentityServer4.Models.Token;
 
 namespace IdentityServer4.Services
 {
@@ -70,10 +73,10 @@ namespace IdentityServer4.Services
         /// </returns>
         public virtual async Task<string> CreateTokenAsync(Token token)
         {
-            var header = await CreateHeaderAsync(token);
+            var additionalHeaderElements = await CreateHeaderAsync(token);
             var payload = await CreatePayloadAsync(token);
 
-            return await CreateJwtAsync(new JwtSecurityToken(header, payload));
+            return await CreateJwtAsync(token, payload, additionalHeaderElements);
         }
 
         /// <summary>
@@ -81,38 +84,19 @@ namespace IdentityServer4.Services
         /// </summary>
         /// <param name="token">The token.</param>
         /// <returns>The JWT header</returns>
-        protected virtual async Task<JwtHeader> CreateHeaderAsync(Token token)
+        protected virtual Task<Dictionary<string, object>> CreateHeaderAsync(Token token)
         {
-            var credential = await Keys.GetSigningCredentialsAsync(token.AllowedSigningAlgorithms);
-
-            if (credential == null)
-            {
-                throw new InvalidOperationException("No signing credential is configured. Can't create JWT token");
-            }
-
-            var header = new JwtHeader(credential);
-
-            // emit x5t claim for backwards compatibility with v4 of MS JWT library
-            if (credential.Key is X509SecurityKey x509Key)
-            {
-                var cert = x509Key.Certificate;
-                if (Clock.UtcNow.UtcDateTime > cert.NotAfter)
-                {
-                    Logger.LogWarning("Certificate {subjectName} has expired on {expiration}", cert.Subject, cert.NotAfter.ToString(CultureInfo.InvariantCulture));
-                }
-
-                header["x5t"] = Base64Url.Encode(cert.GetCertHash());
-            }
+            var additionalHeaderElements = new Dictionary<string, object>();
 
             if (token.Type == TokenTypes.AccessToken)
             {
                 if (Options.AccessTokenJwtType.IsPresent())
                 {
-                    header["typ"] = Options.AccessTokenJwtType;
+                    additionalHeaderElements["typ"] = Options.AccessTokenJwtType;
                 }
             }
 
-            return header;
+            return Task.FromResult(additionalHeaderElements);
         }
 
         /// <summary>
@@ -127,14 +111,26 @@ namespace IdentityServer4.Services
         }
 
         /// <summary>
-        /// Applies the signature to the JWT
+        /// Creates and signs the JWT
         /// </summary>
-        /// <param name="jwt">The JWT object.</param>
-        /// <returns>The signed JWT</returns>
-        protected virtual Task<string> CreateJwtAsync(JwtSecurityToken jwt)
+        /// <param name="token"></param>
+        /// <param name="payload"></param>
+        /// <param name="additionalHeaderElements"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        protected async virtual Task<string> CreateJwtAsync(Token token, JwtPayload payload, Dictionary<string, object> additionalHeaderElements)
         {
-            var handler = new JwtSecurityTokenHandler();
-            return Task.FromResult(handler.WriteToken(jwt));
+            var credential = await Keys.GetSigningCredentialsAsync(token.AllowedSigningAlgorithms);
+
+            if (credential == null)
+            {
+                throw new InvalidOperationException("No signing credential is configured. Can't create JWT token");
+            }
+
+            var payloadJson = JsonConvert.SerializeObject(payload);
+
+            var handler = new JsonWebTokenHandler { SetDefaultTimesOnTokenCreation = false };
+            return handler.CreateToken(payloadJson, credential, additionalHeaderElements);
         }
     }
 }
