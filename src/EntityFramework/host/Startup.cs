@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -31,12 +31,12 @@ namespace IdentityServerHost
                 // this adds the config data from DB (clients, resources, CORS)
                 .AddConfigurationStore(options =>
                 {
-                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString);
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Host"));
                 })
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
-                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString);
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connectionString, b => b.MigrationsAssembly("Host"));
 
                     // this enables automatic token cleanup. this is optional.
                     options.EnableTokenCleanup = true;
