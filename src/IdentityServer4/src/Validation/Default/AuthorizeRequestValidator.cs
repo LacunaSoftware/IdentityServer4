@@ -601,7 +601,7 @@ namespace IdentityServer4.Validation
                 return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "Identity scopes requested, but openid scope is missing");
             }
 
-            if (validatedResources.Resources.ApiScopes.Any())
+            if (validatedResources.Resources.ApiScopes.Any() || validatedResources.Resources.ApiResources.Any())
             {
                 request.IsApiResourceRequest = true;
             }

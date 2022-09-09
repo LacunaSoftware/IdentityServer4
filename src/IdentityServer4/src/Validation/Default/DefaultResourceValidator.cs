@@ -136,8 +136,28 @@ namespace IdentityServer4.Validation
                     }
                     else
                     {
-                        _logger.LogError("Scope {scope} not found in store.", requestedScope.ParsedName);
-                        result.InvalidScopes.Add(requestedScope.RawValue);
+                        var apiResources = resourcesFromStore.FindApiResourcesByScope(requestedScope.ParsedName);
+                        if (apiResources.Any())
+                        {
+                            if (await IsClientAllowedApiResourceScopeAsync(client, requestedScope.ParsedName))
+                            {
+                                result.ParsedScopes.Add(requestedScope);
+
+                                foreach (var api in apiResources)
+                                {
+                                    result.Resources.ApiResources.Add(api);
+                                }
+                            }
+                            else
+                            {
+                                result.InvalidScopes.Add(requestedScope.RawValue);
+                            }
+                        }
+                        else
+                        {
+                            _logger.LogError("Scope {scope} not found in store.", requestedScope.ParsedName);
+                            result.InvalidScopes.Add(requestedScope.RawValue);
+                        }
                     }
                 }
             }
@@ -171,6 +191,22 @@ namespace IdentityServer4.Validation
             if (!allowed)
             {
                 _logger.LogError("Client {client} is not allowed access to scope {scope}.", client.ClientId, apiScope.Name);
+            }
+            return Task.FromResult(allowed);
+        }
+
+        /// <summary>
+        /// Determines if client is allowed access to the API Resource scope.
+        /// </summary>
+        /// <param name="client"></param>
+        /// <param name="scope"></param>
+        /// <returns></returns>
+        protected virtual Task<bool> IsClientAllowedApiResourceScopeAsync(Client client, string scope)
+        {
+            var allowed = client.AllowedScopes.Contains(scope);
+            if (!allowed)
+            {
+                _logger.LogError("Client {client} is not allowed access to scope {scope}.", client.ClientId, scope);
             }
             return Task.FromResult(allowed);
         }
