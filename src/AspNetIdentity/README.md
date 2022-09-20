@@ -6,4 +6,4 @@ You can find a detailed walk-through for ASP.NET Core Identity integration [here
 
 ## Issues
 
-For issues, use the [consolidated IdentityServer4 issue tracker](https://github.com/IdentityServer/IdentityServer4/issues).
+For issues, use the [consolidated IdentityServer4 issue tracker](https://github.com/LacunaSoftware/IdentityServer4/issues).

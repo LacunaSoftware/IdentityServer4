@@ -4,4 +4,4 @@ IdentityServer4.EntityFramework.Storage is a persistence layer for IdentityServe
 
 ## Issues
 
-For issues, use the [consolidated IdentityServer4 issue tracker](https://github.com/IdentityServer/IdentityServer4/issues).
+For issues, use the [consolidated IdentityServer4 issue tracker](https://github.com/LacunaSoftware/IdentityServer4/issues).

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Configuration;
@@ -190,32 +191,13 @@ namespace IdentityServer4.Validation
         /// </summary>
         /// <param name="token">The JWT token</param>
         /// <returns></returns>
-        protected virtual Task<Dictionary<string, string>> ProcessPayloadAsync(JwtSecurityToken token)
+        protected virtual Task<List<Claim>> ProcessPayloadAsync(JwtSecurityToken token)
         {
             // filter JWT validation values
-            var payload = new Dictionary<string, string>();
-            foreach (var key in token.Payload.Keys)
-            {
-                if (!Constants.Filters.JwtRequestClaimTypesFilter.Contains(key))
-                {
-                    var value = token.Payload[key];
+            var filter = Constants.Filters.JwtRequestClaimTypesFilter;
 
-                    switch (value)
-                    {
-                        case string s:
-                            payload.Add(key, s);
-                            break;
-                        case JObject jobj:
-                            payload.Add(key, jobj.ToString(Formatting.None));
-                            break;
-                        case JArray jarr:
-                            payload.Add(key, jarr.ToString(Formatting.None));
-                            break;
-                    }
-                }
-            }
-
-            return Task.FromResult(payload);
+            var filteredClaims = token.Claims.Where(claim => !filter.Contains(claim.Type));
+            return Task.FromResult(filteredClaims.ToList());
         }
     }
 }

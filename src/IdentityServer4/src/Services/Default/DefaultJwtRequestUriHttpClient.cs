@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -39,7 +39,7 @@ namespace IdentityServer4.Services
         public async Task<string> GetJwtAsync(string url, Client client)
         {
             var req = new HttpRequestMessage(HttpMethod.Get, url);
-            req.Properties.Add(IdentityServerConstants.JwtRequestClientKey, client);
+            req.Options.Set(new HttpRequestOptionsKey<Client>(IdentityServerConstants.JwtRequestClientKey), client);
 
             var response = await _client.SendAsync(req);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)

@@ -237,9 +237,10 @@ namespace IdentityServer4.Validation
                 var responseType = request.Raw.Get(OidcConstants.AuthorizeRequest.ResponseType);
                 if (responseType != null)
                 {
-                    if (jwtRequestValidationResult.Payload.TryGetValue(OidcConstants.AuthorizeRequest.ResponseType, out var payloadResponseType))
+                    var payloadResponseType = jwtRequestValidationResult.Payload.Find(c => c.Type == OidcConstants.AuthorizeRequest.ResponseType);
+                    if (payloadResponseType != null)
                     {
-                        if (payloadResponseType != responseType)
+                        if (payloadResponseType.Value != responseType)
                         {
                             LogError("response_type in JWT payload does not match response_type in request", request);
                             return Invalid(request, description: "Invalid JWT request");
@@ -248,9 +249,10 @@ namespace IdentityServer4.Validation
                 }
 
                 // validate client_id mismatch
-                if (jwtRequestValidationResult.Payload.TryGetValue(OidcConstants.AuthorizeRequest.ClientId, out var payloadClientId))
+                var payloadClientId = jwtRequestValidationResult.Payload.Find(c => c.Type == OidcConstants.AuthorizeRequest.ClientId);
+                if (payloadClientId != null)
                 {
-                    if (!string.Equals(request.Client.ClientId, payloadClientId, StringComparison.Ordinal))
+                    if (!string.Equals(request.Client.ClientId, payloadClientId.Value, StringComparison.Ordinal))
                     {
                         LogError("client_id in JWT payload does not match client_id in request", request);
                         return Invalid(request, description: "Invalid JWT request");
@@ -269,23 +271,24 @@ namespace IdentityServer4.Validation
                 };
 
                 // merge jwt payload values into original request parameters
-                foreach (var key in jwtRequestValidationResult.Payload.Keys)
+                //remove existing values
+                foreach (var claim in jwtRequestValidationResult.Payload)
                 {
-                    if (ignoreKeys.Contains(key)) continue;
-                    
-                    var value = jwtRequestValidationResult.Payload[key];
-                    
-                    var qsValue = request.Raw.Get(key);
+                    if (ignoreKeys.Contains(claim.Type)) continue;
+
+                    var qsValue = request.Raw.Get(claim.Type);
                     if (qsValue != null)
                     {
-                        if (!string.Equals(value, qsValue, StringComparison.Ordinal))
-                        {
-                            LogError("parameter mismatch between request object and query string parameter.", request);
-                            return Invalid(request, description: "Parameter mismatch in JWT request");
-                        }
+                        request.Raw.Remove(claim.Type);
                     }
+                }
 
-                    request.Raw.Set(key, value);
+                //re-add values individually because there can be multiple claims with same type
+                foreach (var claim in jwtRequestValidationResult.Payload)
+                {
+                    if (ignoreKeys.Contains(claim.Type)) continue;
+
+                    request.Raw.Add(claim.Type, claim.Value);
                 }
 
                 request.RequestObjectValues = jwtRequestValidationResult.Payload;
@@ -598,7 +601,7 @@ namespace IdentityServer4.Validation
                 return Invalid(request, OidcConstants.AuthorizeErrors.InvalidScope, "Identity scopes requested, but openid scope is missing");
             }
 
-            if (validatedResources.Resources.ApiScopes.Any())
+            if (validatedResources.Resources.ApiScopes.Any() || validatedResources.Resources.ApiResources.Any())
             {
                 request.IsApiResourceRequest = true;
             }
