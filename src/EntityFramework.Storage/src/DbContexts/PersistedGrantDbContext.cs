@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -36,7 +36,7 @@ namespace IdentityServer4.EntityFramework.DbContexts
         /// <param name="options">The options.</param>
         /// <param name="storeOptions">The store options.</param>
         /// <exception cref="ArgumentNullException">storeOptions</exception>
-        public PersistedGrantDbContext(DbContextOptions options, OperationalStoreOptions storeOptions)
+        protected PersistedGrantDbContext(DbContextOptions options, OperationalStoreOptions storeOptions)
             : base(options, storeOptions)
         {
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -34,7 +34,7 @@ namespace IdentityServer4.EntityFramework.DbContexts
         /// </summary>
         /// <param name="options">The options.</param>
         /// <param name="storeOptions">The store options.</param>
-        public ConfigurationDbContext(DbContextOptions options, ConfigurationStoreOptions storeOptions)
+        protected ConfigurationDbContext(DbContextOptions options, ConfigurationStoreOptions storeOptions)
             : base(options, storeOptions)
         {
         }
