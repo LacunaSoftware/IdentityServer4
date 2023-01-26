@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -28,6 +28,16 @@ namespace IdentityServer4.EntityFramework.DbContexts
             : base(options, storeOptions)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="storeOptions">The store options.</param>
+        protected ConfigurationDbContext(DbContextOptions options, ConfigurationStoreOptions storeOptions)
+            : base(options, storeOptions)
+        {
+        }
     }
 
     /// <summary>
@@ -49,7 +59,29 @@ namespace IdentityServer4.EntityFramework.DbContexts
         public ConfigurationDbContext(DbContextOptions<TContext> options, ConfigurationStoreOptions storeOptions)
             : base(options)
         {
-            this.storeOptions = storeOptions ?? throw new ArgumentNullException(nameof(storeOptions));
+            CheckStoreOptions(storeOptions);
+            this.storeOptions = storeOptions;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConfigurationDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options.</param>
+        /// <param name="storeOptions">The store options.</param>
+        /// <exception cref="ArgumentNullException">storeOptions</exception>
+        protected ConfigurationDbContext(DbContextOptions options, ConfigurationStoreOptions storeOptions)
+            : base(options)
+        {
+            CheckStoreOptions(storeOptions);
+            this.storeOptions = storeOptions;
+        }
+
+        private void CheckStoreOptions(ConfigurationStoreOptions storeOptions)
+        {
+            if (storeOptions == null)
+            {
+                throw new ArgumentNullException(nameof(storeOptions));
+            }
         }
 
         /// <summary>
