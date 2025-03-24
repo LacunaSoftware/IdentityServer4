@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Validation
 {
@@ -19,7 +20,7 @@ namespace IdentityServer4.Validation
     {
         private readonly ILogger _logger;
         private readonly IEnumerable<ISecretValidator> _validators;
-        private readonly ISystemClock _clock;
+        private readonly IClock _clock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SecretValidator"/> class.
@@ -27,7 +28,7 @@ namespace IdentityServer4.Validation
         /// <param name="clock">The clock.</param>
         /// <param name="validators">The validators.</param>
         /// <param name="logger">The logger.</param>
-        public SecretValidator(ISystemClock clock, IEnumerable<ISecretValidator> validators, ILogger<ISecretsListValidator> logger)
+        public SecretValidator(IClock clock, IEnumerable<ISecretValidator> validators, ILogger<ISecretsListValidator> logger)
         {
             _clock = clock;
             _validators = validators;

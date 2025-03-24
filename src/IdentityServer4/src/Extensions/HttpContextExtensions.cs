@@ -12,6 +12,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 #pragma warning disable 1591
 
@@ -197,7 +198,7 @@ namespace IdentityServer4.Extensions
 
             if (endSessionMsg != null)
             {
-                var clock = context.RequestServices.GetRequiredService<ISystemClock>();
+                var clock = context.RequestServices.GetRequiredService<IClock>();
                 var msg = new Message<LogoutNotificationContext>(endSessionMsg, clock.UtcNow.UtcDateTime);
 
                 var endSessionMessageStore = context.RequestServices.GetRequiredService<IMessageStore<LogoutNotificationContext>>();

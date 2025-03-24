@@ -5,8 +5,8 @@
 using System;
 using System.Threading.Tasks;
 using IdentityServer4.Configuration;
+using IdentityServer4.Infrastructure.Clock;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace IdentityServer4.Services
@@ -18,7 +18,7 @@ namespace IdentityServer4.Services
     public class DistributedDeviceFlowThrottlingService : IDeviceFlowThrottlingService
     {
         private readonly IDistributedCache _cache;
-        private readonly ISystemClock _clock;
+        private readonly IClock _clock;
         private readonly IdentityServerOptions _options;
 
         private const string KeyPrefix = "devicecode_";
@@ -31,7 +31,7 @@ namespace IdentityServer4.Services
         /// <param name="options">The options.</param>
         public DistributedDeviceFlowThrottlingService(
             IDistributedCache cache,
-            ISystemClock clock,
+            IClock clock,
             IdentityServerOptions options)
         {
             _cache = cache;

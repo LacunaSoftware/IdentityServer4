@@ -8,13 +8,13 @@ using System.Linq;
 using System.Net.Http;
 using IdentityServer.UnitTests.Common;
 using IdentityServer4.Configuration;
+using IdentityServer4.Infrastructure.Clock;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Services.Default;
 using IdentityServer4.Stores;
 using IdentityServer4.Stores.Serialization;
 using IdentityServer4.Validation;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer.UnitTests.Validation.Setup
@@ -248,7 +248,7 @@ namespace IdentityServer.UnitTests.Validation.Setup
             IReferenceTokenStore store = null, 
             IRefreshTokenStore refreshTokenStore = null,
             IProfileService profile = null, 
-            IdentityServerOptions options = null, ISystemClock clock = null)
+            IdentityServerOptions options = null, IClock clock = null)
         {
             if (options == null)
             {
@@ -301,7 +301,7 @@ namespace IdentityServer.UnitTests.Validation.Setup
             IDeviceFlowCodeService service,
             IProfileService profile = null,
             IDeviceFlowThrottlingService throttlingService = null,
-            ISystemClock clock = null)
+            IClock clock = null)
         {
             profile = profile ?? new TestProfileService();
             throttlingService = throttlingService ?? new TestDeviceFlowThrottlingService();

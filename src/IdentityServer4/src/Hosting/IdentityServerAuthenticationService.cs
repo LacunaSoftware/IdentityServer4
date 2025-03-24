@@ -14,6 +14,7 @@ using System;
 using IdentityModel;
 using System.Linq;
 using IdentityServer4.Configuration;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Hosting
 {
@@ -28,7 +29,7 @@ namespace IdentityServer4.Hosting
     {
         private readonly IAuthenticationService _inner;
         private readonly IAuthenticationSchemeProvider _schemes;
-        private readonly ISystemClock _clock;
+        private readonly IClock _clock;
         private readonly IUserSession _session;
         private readonly IBackChannelLogoutService _backChannelLogoutService;
         private readonly IdentityServerOptions _options;
@@ -37,7 +38,7 @@ namespace IdentityServer4.Hosting
         public IdentityServerAuthenticationService(
             Decorator<IAuthenticationService> decorator,
             IAuthenticationSchemeProvider schemes,
-            ISystemClock clock,
+            IClock clock,
             IUserSession session,
             IBackChannelLogoutService backChannelLogoutService,
             IdentityServerOptions options,

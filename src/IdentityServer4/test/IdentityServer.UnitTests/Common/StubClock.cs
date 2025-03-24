@@ -3,11 +3,11 @@
 
 
 using System;
-using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer.UnitTests.Common
 {
-    internal class StubClock : ISystemClock
+    internal class StubClock : IClock
     {
         public Func<DateTime> UtcNowFunc = () => DateTime.UtcNow;
         public DateTimeOffset UtcNow => new DateTimeOffset(UtcNowFunc());

@@ -16,6 +16,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Authentication;
 using System.Text.Encodings.Web;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -33,7 +34,7 @@ namespace IdentityServer4.Endpoints.Results
             IdentityServerOptions options,
             IUserSession userSession,
             IMessageStore<ErrorMessage> errorMessageStore,
-            ISystemClock clock)
+            IClock clock)
             : this(response)
         {
             _options = options;
@@ -45,14 +46,14 @@ namespace IdentityServer4.Endpoints.Results
         private IdentityServerOptions _options;
         private IUserSession _userSession;
         private IMessageStore<ErrorMessage> _errorMessageStore;
-        private ISystemClock _clock;
+        private IClock _clock;
 
         private void Init(HttpContext context)
         {
             _options = _options ?? context.RequestServices.GetRequiredService<IdentityServerOptions>();
             _userSession = _userSession ?? context.RequestServices.GetRequiredService<IUserSession>();
             _errorMessageStore = _errorMessageStore ?? context.RequestServices.GetRequiredService<IMessageStore<ErrorMessage>>();
-            _clock = _clock ?? context.RequestServices.GetRequiredService<ISystemClock>();
+            _clock = _clock ?? context.RequestServices.GetRequiredService<IClock>();
         }
 
         public async Task ExecuteAsync(HttpContext context)
@@ -132,7 +133,7 @@ namespace IdentityServer4.Endpoints.Results
             var referrer_policy = "no-referrer";
             if (!context.Response.Headers.ContainsKey("Referrer-Policy"))
             {
-                context.Response.Headers.Add("Referrer-Policy", referrer_policy);
+                context.Response.Headers.Append("Referrer-Policy", referrer_policy);
             }
         }
 

@@ -28,9 +28,12 @@ namespace IdentityServer.UnitTests.Validation.Secrets
     {
         private readonly ISecretValidator _validator;
         private readonly IClientStore _clients;
+        private readonly IdentityServerOptions _options;
 
         public PrivateKeyJwtSecretValidation()
         {
+            _options = new IdentityServerOptions();
+
             _validator = new PrivateKeyJwtSecretValidator(
                 new MockHttpContextAccessor(
                     new IdentityServerOptions()
@@ -39,7 +42,8 @@ namespace IdentityServer.UnitTests.Validation.Secrets
                         }
                     ),
                     new DefaultReplayCache(new TestCache()), 
-                    new LoggerFactory().CreateLogger<PrivateKeyJwtSecretValidator>()
+                    new LoggerFactory().CreateLogger<PrivateKeyJwtSecretValidator>(),
+                    _options
                 );
             _clients = new InMemoryClientStore(ClientValidationTestClients.Get());
         }
