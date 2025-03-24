@@ -35,8 +35,6 @@
   <ItemGroup>
     <PackageReference Include="Lacuna.IdentityServer4.Storage" />
     
-    <PackageReference Include="AutoMapper" />
-    
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />
