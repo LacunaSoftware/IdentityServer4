@@ -1,11 +1,11 @@
 <Project>
 
   <PropertyGroup>
-    <FrameworkVersion>6.0.8</FrameworkVersion>
-    <ExtensionsVersion>6.0.8</ExtensionsVersion>
-    <EntityFrameworkVersion>6.0.8</EntityFrameworkVersion>
+    <FrameworkVersion>8.0.14</FrameworkVersion>
+    <ExtensionsVersion>8.0.1</ExtensionsVersion>
+    <EntityFrameworkVersion>8.0.14</EntityFrameworkVersion>
     
-    <IdentityServerVersion>6.0.*</IdentityServerVersion>
+    <IdentityServerVersion>8.0.*</IdentityServerVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,22 +33,21 @@
     <!--microsoft extensions -->
     <PackageReference Update="Microsoft.Extensions.Caching.Memory" Version="$(ExtensionsVersion)" />
     <PackageReference Update="Microsoft.Extensions.Http" Version="$(ExtensionsVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Http.Polly" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Http.Polly" Version="8.0.14" />
     <PackageReference Update="Microsoft.Extensions.Logging" Version="$(ExtensionsVersion)" />
     <PackageReference Update="Microsoft.Extensions.Logging.Console" Version="$(ExtensionsVersion)" />
-    <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(ExtensionsVersion)" />
+    <PackageReference Update="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     
     <!--misc -->
-    <PackageReference Update="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="6.22.1" />
-    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="6.22.1" />
+    <PackageReference Update="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Update="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.3.1" />
+    <PackageReference Update="System.IdentityModel.Tokens.Jwt" Version="7.3.1" />
     <PackageReference Update="System.Security.Principal.Windows" Version="5.0.0" />
-    <PackageReference Update="AutoMapper" Version="[10.0.0,11.0)" />
     
     <!--microsoft asp.net core -->
     <PackageReference Update="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(FrameworkVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.TestHost" Version="$(FrameworkVersion)" />
-    <PackageReference Update="Microsoft.AspNetCore.Identity" Version="$(FrameworkVersion)" />
+    <PackageReference Update="Microsoft.AspNetCore.Identity" Version="2.3.1" />
     <PackageReference Update="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="$(FrameworkVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="$(FrameworkVersion)" />
     <PackageReference Update="Microsoft.AspNetCore.Authentication.Certificate" Version="$(FrameworkVersion)"/>

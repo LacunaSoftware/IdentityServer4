@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Validation;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Services
 {
@@ -29,7 +30,7 @@ namespace IdentityServer4.Services
         /// <summary>
         ///  The clock
         /// </summary>
-        protected readonly ISystemClock Clock;
+        protected readonly IClock Clock;
 
         /// <summary>
         /// The logger
@@ -43,7 +44,7 @@ namespace IdentityServer4.Services
         /// <param name="userConsentStore">The user consent store.</param>
         /// <param name="logger">The logger.</param>
         /// <exception cref="System.ArgumentNullException">store</exception>
-        public DefaultConsentService(ISystemClock clock, IUserConsentStore userConsentStore, ILogger<DefaultConsentService> logger)
+        public DefaultConsentService(IClock clock, IUserConsentStore userConsentStore, ILogger<DefaultConsentService> logger)
         {
             Clock = clock;
             UserConsentStore = userConsentStore;

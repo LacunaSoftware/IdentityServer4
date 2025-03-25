@@ -26,6 +26,7 @@ using static IdentityServer4.Constants;
 using IdentityServer4.Extensions;
 using IdentityServer4.Hosting.FederatedSignOut;
 using IdentityServer4.Services.Default;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -174,6 +175,7 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.Services.TryAddTransient<IBackChannelLogoutService, DefaultBackChannelLogoutService>();
             builder.Services.TryAddTransient<IResourceValidator, DefaultResourceValidator>();
             builder.Services.TryAddTransient<IScopeParser, DefaultScopeParser>();
+            builder.Services.TryAddTransient<IClock, DefaultClock>();
 
             builder.AddJwtRequestUriHttpClient();
             builder.AddBackChannelLogoutHttpClient();

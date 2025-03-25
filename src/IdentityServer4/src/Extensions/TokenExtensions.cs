@@ -13,6 +13,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using IdentityServer4.Configuration;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Extensions
 {
@@ -31,7 +32,7 @@ namespace IdentityServer4.Extensions
         /// <returns></returns>
         /// <exception cref="Exception">
         /// </exception>
-        public static JwtPayload CreateJwtPayload(this Token token, ISystemClock clock, IdentityServerOptions options, ILogger logger)
+        public static JwtPayload CreateJwtPayload(this Token token, IClock clock, IdentityServerOptions options, ILogger logger)
         {
             var payload = new JwtPayload(
                 token.Issuer,

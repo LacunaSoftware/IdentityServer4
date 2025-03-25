@@ -9,6 +9,7 @@ using IdentityServer4.Configuration;
 using System.Threading.Tasks;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Events
 {
@@ -36,7 +37,7 @@ namespace IdentityServer4.Events
         /// <summary>
         /// The clock
         /// </summary>
-        protected readonly ISystemClock Clock;
+        protected readonly IClock Clock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultEventService"/> class.
@@ -45,7 +46,7 @@ namespace IdentityServer4.Events
         /// <param name="context">The context.</param>
         /// <param name="sink">The sink.</param>
         /// <param name="clock">The clock.</param>
-        public DefaultEventService(IdentityServerOptions options, IHttpContextAccessor context, IEventSink sink, ISystemClock clock)
+        public DefaultEventService(IdentityServerOptions options, IHttpContextAccessor context, IEventSink sink, IClock clock)
         {
             Options = options;
             Context = context;

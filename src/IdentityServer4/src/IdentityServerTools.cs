@@ -12,6 +12,7 @@ using IdentityServer4.Services;
 using IdentityModel;
 using System;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4
 {
@@ -22,7 +23,7 @@ namespace IdentityServer4
     {
         internal readonly IHttpContextAccessor ContextAccessor;
         private readonly ITokenCreationService _tokenCreation;
-        private readonly ISystemClock _clock;
+        private readonly IClock _clock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServerTools" /> class.
@@ -30,7 +31,7 @@ namespace IdentityServer4
         /// <param name="contextAccessor">The context accessor.</param>
         /// <param name="tokenCreation">The token creation service.</param>
         /// <param name="clock">The clock.</param>
-        public IdentityServerTools(IHttpContextAccessor contextAccessor, ITokenCreationService tokenCreation, ISystemClock clock)
+        public IdentityServerTools(IHttpContextAccessor contextAccessor, ITokenCreationService tokenCreation, IClock clock)
         {
             ContextAccessor = contextAccessor;
             _tokenCreation = tokenCreation;

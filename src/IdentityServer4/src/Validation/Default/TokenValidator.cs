@@ -18,7 +18,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.Configuration;
 using IdentityServer4.Logging.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Validation
 {
@@ -32,7 +32,7 @@ namespace IdentityServer4.Validation
         private readonly IClientStore _clients;
         private readonly IProfileService _profile;
         private readonly IKeyMaterialService _keys;
-        private readonly ISystemClock _clock;
+        private readonly IClock _clock;
         private readonly TokenValidationLog _log;
 
         public TokenValidator(
@@ -44,7 +44,7 @@ namespace IdentityServer4.Validation
             IRefreshTokenStore refreshTokenStore,
             ICustomTokenValidator customValidator,
             IKeyMaterialService keys,
-            ISystemClock clock,
+            IClock clock,
             ILogger<TokenValidator> logger)
         {
             _options = options;

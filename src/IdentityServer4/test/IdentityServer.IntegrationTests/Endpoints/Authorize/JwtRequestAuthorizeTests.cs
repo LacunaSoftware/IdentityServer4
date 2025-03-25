@@ -33,7 +33,16 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
         private readonly IdentityServerPipeline _mockPipeline = new IdentityServerPipeline();
         private readonly Client _client;
 
-        private readonly string _symmetricJwk = @"{ 'kty': 'oct', 'use': 'sig', 'kid': '1', 'k': 'nYA-IFt8xTsdBHe9hunvizcp3Dt7f6qGqudq18kZHNtvqEGjJ9Ud-9x3kbQ-LYfLHS3xM2MpFQFg1JzT_0U_F8DI40oby4TvBDGszP664UgA8_5GjB7Flnrlsap1NlitvNpgQX3lpyTvC2zVuQ-UVsXbBDAaSBUSlnw7SE4LM8Ye2WYZrdCCXL8yAX9vIR7vf77yvNTEcBCI6y4JlvZaqMB4YKVSfygs8XqGGCHjLpE5bvI-A4ESbAUX26cVFvCeDg9pR6HK7BmwPMlO96krgtKZcXEJtUELYPys6-rbwAIdmxJxKxpgRpt0FRv_9fm6YPwG7QivYBX-vRwaodL1TA', 'alg': 'HS256'}";
+        private readonly string _symmetricJwk =
+        """
+        { 
+            "kid": "1", 
+            "alg": "HS256",
+            "kty": "oct", 
+            "use": "sig", 
+            "k": "nYA-IFt8xTsdBHe9hunvizcp3Dt7f6qGqudq18kZHNtvqEGjJ9Ud-9x3kbQ-LYfLHS3xM2MpFQFg1JzT_0U_F8DI40oby4TvBDGszP664UgA8_5GjB7Flnrlsap1NlitvNpgQX3lpyTvC2zVuQ-UVsXbBDAaSBUSlnw7SE4LM8Ye2WYZrdCCXL8yAX9vIR7vf77yvNTEcBCI6y4JlvZaqMB4YKVSfygs8XqGGCHjLpE5bvI-A4ESbAUX26cVFvCeDg9pR6HK7BmwPMlO96krgtKZcXEJtUELYPys6-rbwAIdmxJxKxpgRpt0FRv_9fm6YPwG7QivYBX-vRwaodL1TA"
+        }
+        """;
         private readonly RsaSecurityKey _rsaKey;
 
         public JwtRequestAuthorizeTests()
@@ -191,13 +200,6 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             return handler.WriteToken(token);
         }
 
-        private void CheckClaimInRequestObject(string type = "foo", string value = "123foo")
-        {
-            var claim = _mockPipeline.LoginRequest.RequestObjectValues.Find(c => c.Type == type)?.Value;
-            claim.Should().NotBeNull();
-            claim.Should().Be(value);
-        }
-
         [Fact]
         [Trait("Category", Category)]
         public async Task missing_request_object_should_fail()
@@ -261,7 +263,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
 
             _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            CheckClaimInRequestObject();
+            _mockPipeline.LoginRequest.RequestObjectValues.Single(c => c.Type == "foo" && c.Value == "123foo").Should().NotBeNull();
         }
 
         [Fact]
@@ -308,7 +310,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
 
             _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            CheckClaimInRequestObject();
+            _mockPipeline.LoginRequest.RequestObjectValues.Single(c => c.Type == "foo" && c.Value == "123foo").Should().NotBeNull();
         }
 
         [Fact]
@@ -355,7 +357,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
 
             _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            CheckClaimInRequestObject();
+            _mockPipeline.LoginRequest.RequestObjectValues.Single(c => c.Type == "foo" && c.Value == "123foo").Should().NotBeNull();
         }
         
         [Fact]
@@ -404,7 +406,7 @@ namespace IdentityServer.IntegrationTests.Endpoints.Authorize
             _mockPipeline.LoginRequest.Parameters["foo"].Should().Be("123foo");
 
             _mockPipeline.LoginRequest.RequestObjectValues.Count.Should().Be(11);
-            CheckClaimInRequestObject();
+            _mockPipeline.LoginRequest.RequestObjectValues.Single(c => c.Type == "foo" && c.Value == "123foo").Should().NotBeNull();
         }
         
         [Fact]

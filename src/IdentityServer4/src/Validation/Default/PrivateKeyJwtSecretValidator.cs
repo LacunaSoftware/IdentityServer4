@@ -7,11 +7,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityServer4.Validation
@@ -24,17 +26,24 @@ namespace IdentityServer4.Validation
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IReplayCache _replayCache;
         private readonly ILogger _logger;
+        private readonly IdentityServerOptions _options;
 
         private const string Purpose = nameof(PrivateKeyJwtSecretValidator);
         
         /// <summary>
         /// Instantiates an instance of private_key_jwt secret validator
         /// </summary>
-        public PrivateKeyJwtSecretValidator(IHttpContextAccessor contextAccessor, IReplayCache replayCache, ILogger<PrivateKeyJwtSecretValidator> logger)
+        public PrivateKeyJwtSecretValidator(
+            IHttpContextAccessor contextAccessor, 
+            IReplayCache replayCache, 
+            ILogger<PrivateKeyJwtSecretValidator> logger,
+            IdentityServerOptions options
+        )
         {
             _contextAccessor = contextAccessor;
             _replayCache = replayCache;
             _logger = logger;
+            _options = options;
         }
 
         /// <summary>
@@ -107,24 +116,29 @@ namespace IdentityServer4.Validation
             };
             try
             {
-                var handler = new JwtSecurityTokenHandler();
-                handler.ValidateToken(jwtTokenString, tokenValidationParameters, out var token);
+                var handler = new JsonWebTokenHandler() { MaximumTokenSizeInBytes = _options.InputLengthRestrictions.Jwt };
+                var result = await handler.ValidateTokenAsync(jwtTokenString, tokenValidationParameters);
+                if (!result.IsValid)
+                {
+                    _logger.LogError(result.Exception, "JWT token validation error");
+                    return fail;
+                }
 
-                var jwtToken = (JwtSecurityToken)token;
+                var jwtToken = (JsonWebToken) result.SecurityToken;
                 if (jwtToken.Subject != jwtToken.Issuer)
                 {
                     _logger.LogError("Both 'sub' and 'iss' in the client assertion token must have a value of client_id.");
                     return fail;
                 }
-                
-                var exp = jwtToken.Payload.Exp;
-                if (!exp.HasValue)
+
+                var exp = jwtToken.ValidTo;
+                if (exp == DateTime.MinValue)
                 {
                     _logger.LogError("exp is missing.");
                     return fail;
                 }
-                
-                var jti = jwtToken.Payload.Jti;
+
+                var jti = jwtToken.Id;
                 if (jti.IsMissing())
                 {
                     _logger.LogError("jti is missing.");
@@ -138,7 +152,7 @@ namespace IdentityServer4.Validation
                 }
                 else
                 {
-                    await _replayCache.AddAsync(Purpose, jti, DateTimeOffset.FromUnixTimeSeconds(exp.Value).AddMinutes(5));
+                    await _replayCache.AddAsync(Purpose, jti, exp.AddMinutes(5));
                 }
 
                 return success;

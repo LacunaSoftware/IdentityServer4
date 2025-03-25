@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -13,6 +13,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.Extensions;
 using System;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -37,7 +38,7 @@ namespace IdentityServer4.Endpoints.Results
         internal EndSessionResult(
             EndSessionValidationResult result,
             IdentityServerOptions options,
-            ISystemClock clock,
+            IClock clock,
             IMessageStore<LogoutMessage> logoutMessageStore)
             : this(result)
         {
@@ -47,13 +48,13 @@ namespace IdentityServer4.Endpoints.Results
         }
 
         private IdentityServerOptions _options;
-        private ISystemClock _clock;
+        private IClock _clock;
         private IMessageStore<LogoutMessage> _logoutMessageStore;
 
         private void Init(HttpContext context)
         {
             _options = _options ?? context.RequestServices.GetRequiredService<IdentityServerOptions>();
-            _clock = _clock ?? context.RequestServices.GetRequiredService<ISystemClock>();
+            _clock = _clock ?? context.RequestServices.GetRequiredService<IClock>();
             _logoutMessageStore = _logoutMessageStore ?? context.RequestServices.GetRequiredService<IMessageStore<LogoutMessage>>();
         }
 

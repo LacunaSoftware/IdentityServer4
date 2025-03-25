@@ -5,8 +5,8 @@
 using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
+using IdentityServer4.Infrastructure.Clock;
 using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Newtonsoft.Json;
@@ -38,7 +38,7 @@ namespace IdentityServer4.Services
         /// <summary>
         ///  The clock
         /// </summary>
-        protected readonly ISystemClock Clock;
+        protected readonly IClock Clock;
 
         /// <summary>
         /// The options
@@ -53,7 +53,7 @@ namespace IdentityServer4.Services
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
         public DefaultTokenCreationService(
-            ISystemClock clock,
+            IClock clock,
             IKeyMaterialService keys,
             IdentityServerOptions options,
             ILogger<DefaultTokenCreationService> logger)

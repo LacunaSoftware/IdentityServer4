@@ -12,6 +12,7 @@ using System.Net.Http;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using Microsoft.Extensions.Logging;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -453,6 +454,18 @@ namespace Microsoft.Extensions.DependencyInjection
             // This is added as scoped due to the note regarding the AuthenticateAsync
             // method in the IdentityServer4.Services.DefaultUserSession implementation.
             builder.Services.AddScoped<IUserSession, T>();
+
+            return builder;
+        }
+
+        /// <summary>
+        /// Adds the legacy clock based on the pre-.NET8 ISystemClock.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
+        public static IIdentityServerBuilder AddLegacyClock(this IIdentityServerBuilder builder)
+        {
+            builder.Services.AddTransient<IClock, LegacyClock>();
 
             return builder;
         }

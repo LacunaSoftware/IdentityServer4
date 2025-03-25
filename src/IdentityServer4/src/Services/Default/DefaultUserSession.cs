@@ -9,6 +9,7 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Infrastructure.Clock;
 
 namespace IdentityServer4.Services
 {
@@ -36,7 +37,7 @@ namespace IdentityServer4.Services
         /// <summary>
         /// The clock
         /// </summary>
-        protected readonly ISystemClock Clock;
+        protected readonly IClock Clock;
 
         /// <summary>
         /// The logger
@@ -97,7 +98,7 @@ namespace IdentityServer4.Services
             IHttpContextAccessor httpContextAccessor,
             IAuthenticationHandlerProvider handlers,
             IdentityServerOptions options,
-            ISystemClock clock,
+            IClock clock,
             ILogger<IUserSession> logger)
         {
             HttpContextAccessor = httpContextAccessor;

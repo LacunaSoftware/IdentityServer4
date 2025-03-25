@@ -1,4 +1,4 @@
-﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
@@ -17,7 +17,7 @@ namespace IdentityServer.UnitTests.Extensions
             var ctx = new DefaultHttpContext();
             ctx.Request.Scheme = "http";
             ctx.Request.Host = new HostString("foo");
-            ctx.Request.Headers.Add("Origin", "http://bar");
+            ctx.Request.Headers.Append("Origin", "http://bar");
 
             ctx.Request.GetCorsOrigin().Should().Be("http://bar");
         }
@@ -28,7 +28,7 @@ namespace IdentityServer.UnitTests.Extensions
             var ctx = new DefaultHttpContext();
             ctx.Request.Scheme = "http";
             ctx.Request.Host = new HostString("foo");
-            ctx.Request.Headers.Add("Origin", "http://foo");
+            ctx.Request.Headers.Append("Origin", "http://foo");
 
             ctx.Request.GetCorsOrigin().Should().BeNull();
         }

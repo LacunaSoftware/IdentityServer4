@@ -6,9 +6,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Extensions;
+using IdentityServer4.Infrastructure.Clock;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer4.Validation
@@ -21,7 +21,7 @@ namespace IdentityServer4.Validation
         private readonly IDeviceFlowCodeService _devices;
         private readonly IProfileService _profile;
         private readonly IDeviceFlowThrottlingService _throttlingService;
-        private readonly ISystemClock _systemClock;
+        private readonly IClock _clock;
         private readonly ILogger<DeviceCodeValidator> _logger;
 
         /// <summary>
@@ -30,19 +30,19 @@ namespace IdentityServer4.Validation
         /// <param name="devices">The devices.</param>
         /// <param name="profile">The profile.</param>
         /// <param name="throttlingService">The throttling service.</param>
-        /// <param name="systemClock">The system clock.</param>
+        /// <param name="clock">The system clock.</param>
         /// <param name="logger">The logger.</param>
         public DeviceCodeValidator(
             IDeviceFlowCodeService devices,
             IProfileService profile,
             IDeviceFlowThrottlingService throttlingService,
-            ISystemClock systemClock,
+            IClock clock,
             ILogger<DeviceCodeValidator> logger)
         {
             _devices = devices;
             _profile = profile;
             _throttlingService = throttlingService;
-            _systemClock = systemClock;
+            _clock = clock;
             _logger = logger;
         }
 
@@ -78,7 +78,7 @@ namespace IdentityServer4.Validation
             }
 
             // validate lifetime
-            if (deviceCode.CreationTime.AddSeconds(deviceCode.Lifetime) < _systemClock.UtcNow)
+            if (deviceCode.CreationTime.AddSeconds(deviceCode.Lifetime) < _clock.UtcNow)
             {
                 _logger.LogError("Expired device code");
                 context.Result = new TokenRequestValidationResult(context.Request, OidcConstants.TokenErrors.ExpiredToken);
